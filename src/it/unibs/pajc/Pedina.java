@@ -1,5 +1,7 @@
 package it.unibs.pajc;
 
+import java.awt.*;
+
 public class Pedina {
 
     boolean isDamone;
@@ -12,6 +14,11 @@ public class Pedina {
         this.isBianco = isBianco;
         this.position = position;
         this.id=id;
+    }
+
+    public Color getColor(){
+        return isBianco?Color.GRAY:Color.BLUE;
+
     }
 }
 
