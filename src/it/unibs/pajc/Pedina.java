@@ -2,7 +2,7 @@ package it.unibs.pajc;
 
 import java.awt.*;
 
-public class Pedina {
+public class Pedina extends  Pezzo{
 
     boolean isDamone;
     boolean isBianco;

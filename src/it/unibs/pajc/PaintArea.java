@@ -1,8 +1,6 @@
 package it.unibs.pajc;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
@@ -13,13 +11,18 @@ public class PaintArea extends JPanel implements MouseMotionListener {
     private int paintCount = 0;
     int cellSize;
     Point mousePosition = null;
+    Graphics2D g2;
 
     public PaintArea() {
         this.addMouseMotionListener(this);
     }
 
     protected void paintComponent(Graphics g) {
+        //questo  viene spesso chiamato per fare ridipingere il component, a meno che tu stesso non voglia rifarlo
         super.paintComponent(g);
+        // graphics esiste sin da java 1.0, in genere il 90% delle volte si fa questo cast
+        // per lavorare con graphics2d, che è molto più recente
+        g2=(Graphics2D)g;
 
         int w = getWidth();
         int h = getHeight();
@@ -41,10 +44,11 @@ public class PaintArea extends JPanel implements MouseMotionListener {
         }
         coloraCella(g);
         // disegnare la posizine del mouse
+        /*
         if(mousePosition != null) {
             g.setColor(Color.red);
             g.fillOval(mousePosition.x, mousePosition.y, 30, 30);
-        }
+        }*/
      //   g.drawString("" + cellSize, 10, 10);
 
        // g.drawString("" + paintCount++, 10, 10);
@@ -68,6 +72,7 @@ public class PaintArea extends JPanel implements MouseMotionListener {
         g.setColor(Color.MAGENTA);
         if(mousePosition!=null){
             Position p=calcolaCella();
+            g2.setStroke(new BasicStroke(3));
             g.drawRect(p.x,p.y,cellSize,cellSize);
         }
     }
@@ -92,12 +97,9 @@ public class PaintArea extends JPanel implements MouseMotionListener {
 
     private Position calcolaCella(){
         int x,y;
-        x=(mousePosition.x%(cellSize*8)/cellSize);
-        y=(mousePosition.y%(cellSize*8)/cellSize);
-        x=x*cellSize;
-        y=y*cellSize;
+        x=(mousePosition.x%(cellSize*8)/cellSize)*cellSize;
+        y=(mousePosition.y%(cellSize*8)/cellSize)*cellSize;
         return new Position(x,y);
-
     }
 
     public void mouseDragged(MouseEvent e) {

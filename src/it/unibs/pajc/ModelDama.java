@@ -17,11 +17,9 @@ public class ModelDama {
         for(int i=0;i<12;i++){
            addPedina(idCount,false,20+i);
         }
-
     }
 
     public void addPedina(int id,boolean isBianco, int position ){
         pedine.add(id,new Pedina(false,isBianco,position,id));
-
     }
 }
