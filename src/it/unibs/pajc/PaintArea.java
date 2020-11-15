@@ -2,6 +2,7 @@ package it.unibs.pajc;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
@@ -12,6 +13,7 @@ public class PaintArea extends JPanel implements MouseMotionListener {
     int cellSize;
     Point mousePosition = null;
     Graphics2D g2;
+    ModelDama modelDama= new ModelDama();
 
     public PaintArea() {
         this.addMouseMotionListener(this);
@@ -38,9 +40,8 @@ public class PaintArea extends JPanel implements MouseMotionListener {
         coloraScacchiera(g);
        // paintPedina(g,0);
 
-        ModelDama modelDama= new ModelDama();
-        for(Pedina p:modelDama.pedine){
-            paintPedina(g,p);
+        for(Pezzo p:modelDama.pezzi){
+            paintPezzo(g,p);
         }
         coloraCella(g);
         // disegnare la posizine del mouse
@@ -55,10 +56,12 @@ public class PaintArea extends JPanel implements MouseMotionListener {
     }
 
 
+
     private void coloraScacchiera(Graphics g){
         g.setColor(Color.white);
         g.fillRect(0, 0, cellSize * 8, cellSize * 8);
         g.setColor(Color.black);
+        int i=0;
         for(int x=0; x<8; x++) {
             for(int y=0; y<8; y++) {
                 if((x+y) % 2 != 0) {
@@ -73,12 +76,17 @@ public class PaintArea extends JPanel implements MouseMotionListener {
         if(mousePosition!=null){
             Position p=calcolaCella();
             g2.setStroke(new BasicStroke(3));
-            g.drawRect(p.x,p.y,cellSize,cellSize);
+            try{
+                if((p.x+p.y)%2!=0)
+                    g.drawRect(p.x*cellSize,p.y*cellSize,cellSize,cellSize);
+            }catch (NullPointerException pointerException){
+
+            }
         }
     }
 
     //cambiare con position
-    private void paintPedina(Graphics g, Pedina p){
+    private void paintPezzo(Graphics g, Pezzo p){
         g.setColor(p.getColor());
         int x,y;
         x=(cellSize/8+((p.position*2+1))*cellSize)%(cellSize*8);
@@ -95,15 +103,28 @@ public class PaintArea extends JPanel implements MouseMotionListener {
 
     }
 
+    /*
+    private int getPosition(Graphics g,Position p){
+        int posizione;
+
+        return posizione;
+    }*/
+
     private Position calcolaCella(){
         int x,y;
-        x=(mousePosition.x%(cellSize*8)/cellSize)*cellSize;
-        y=(mousePosition.y%(cellSize*8)/cellSize)*cellSize;
+        x=(mousePosition.x%(cellSize*8)/cellSize);
+        y=(mousePosition.y%(cellSize*8)/cellSize);
+
         return new Position(x,y);
+    }
+
+    private void muoviPezzo(){
+
     }
 
     public void mouseDragged(MouseEvent e) {
         mousePosition = e.getPoint(); // x, y
+
         this.repaint();
     }
 
@@ -111,6 +132,7 @@ public class PaintArea extends JPanel implements MouseMotionListener {
         mousePosition = e.getPoint(); // x, y
         this.repaint();
     }
+
 
     private class Position{
         int x;

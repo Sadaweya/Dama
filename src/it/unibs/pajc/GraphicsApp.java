@@ -33,11 +33,6 @@ public class GraphicsApp extends JFrame {
         frame.setBounds(0, 0, 600, 600);
         PaintArea paintArea = new PaintArea();
         frame.add(paintArea);
-
-
-
-
-
     }
 
 }

@@ -4,21 +4,8 @@ import java.awt.*;
 
 public class Pedina extends  Pezzo{
 
-    boolean isDamone;
-    boolean isBianco;
-    int position;
-    int id;
-
-    public Pedina(boolean isDamone,boolean isBianco, int position,int id) {
-        this.isDamone = isDamone;
-        this.isBianco = isBianco;
-        this.position = position;
-        this.id=id;
-    }
-
-    public Color getColor(){
-        return isBianco?Color.GRAY:Color.BLUE;
-
+    public Pedina(Fazione fazione, int position) {
+        super(fazione, position);
     }
 }
 
