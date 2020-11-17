@@ -29,6 +29,9 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
         // per lavorare con graphics2d, che è molto più recente
         g2=(Graphics2D)g;
 
+
+        int cancellami;
+
         int w = getWidth();
         int h = getHeight();
         cellSize= (w < h) ? w / 8 : h / 8;
