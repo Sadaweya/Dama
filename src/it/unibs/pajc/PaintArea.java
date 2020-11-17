@@ -6,8 +6,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
+import javax.swing.text.Position;
 
-public class PaintArea extends JPanel implements MouseMotionListener {
+public class PaintArea extends JPanel implements MouseMotionListener, MouseListener {
 
     private int paintCount = 0;
     int cellSize;
@@ -17,6 +18,8 @@ public class PaintArea extends JPanel implements MouseMotionListener {
 
     public PaintArea() {
         this.addMouseMotionListener(this);
+        this.addMouseListener(this);
+
     }
 
     protected void paintComponent(Graphics g) {
@@ -56,7 +59,6 @@ public class PaintArea extends JPanel implements MouseMotionListener {
     }
 
 
-
     private void coloraScacchiera(Graphics g){
         g.setColor(Color.white);
         g.fillRect(0, 0, cellSize * 8, cellSize * 8);
@@ -74,7 +76,7 @@ public class PaintArea extends JPanel implements MouseMotionListener {
     private void coloraCella(Graphics g){
         g.setColor(Color.MAGENTA);
         if(mousePosition!=null){
-            Position p=calcolaCella();
+            Coordinates p=calcolaCellaDaPuntatore();
             g2.setStroke(new BasicStroke(3));
             try{
                 if((p.x+p.y)%2!=0)
@@ -89,42 +91,45 @@ public class PaintArea extends JPanel implements MouseMotionListener {
     private void paintPezzo(Graphics g, Pezzo p){
         g.setColor(p.getColor());
         int x,y;
-        x=(cellSize/8+((p.position*2+1))*cellSize)%(cellSize*8);
-        int temp=p.position/4;
-        if(temp%2!=0)
-            x-=cellSize;
-        y=cellSize/8+(p.position/4)*cellSize;
+        //tramuto da coordinate logiche a coordinate fisiche
+        x=(cellSize/8+(p.x)*cellSize)%(cellSize*8);
+        y=cellSize/8+(p.y)*cellSize;
 
         g.fillOval(x,y, cellSize*5/7, cellSize*5/7);
-      //  g.setColor(Color.GREEN);
-     //   g.drawString("" + x+":"+y , x, y);
+
+     /*   g.setColor(Color.GREEN);
+        g.drawString("" + p.x+":"+p.y , x, y);*/
       //  g.setColor(Color.CYAN);
      //   g.drawString("" +temp , x+50, y);
 
     }
 
-    /*
-    private int getPosition(Graphics g,Position p){
-        int posizione;
-
-        return posizione;
-    }*/
-
-    private Position calcolaCella(){
+    private Coordinates calcolaCellaDaPuntatore(){
         int x,y;
         x=(mousePosition.x%(cellSize*8)/cellSize);
         y=(mousePosition.y%(cellSize*8)/cellSize);
 
-        return new Position(x,y);
+        return new Coordinates(x,y);
     }
 
-    private void muoviPezzo(){
+    private void muoviPezzo(Graphics g){
+        Coordinates temp=calcolaCellaDaPuntatore();
+       // System.out.println("entro muovi pezzo");
 
+        Pezzo p=modelDama.isPresentPezzo(temp);
+
+        if(p!=null){
+          //  System.out.println("pezzo diverso da nullo");
+            if(mousePosition != null) {
+                g.setColor(Color.red);
+               // System.out.println("posizione mouse diversa da nulla");
+                g.fillOval(mousePosition.x, mousePosition.y, cellSize*5/7, cellSize*5/7);
+            }
+        }
     }
 
     public void mouseDragged(MouseEvent e) {
         mousePosition = e.getPoint(); // x, y
-
         this.repaint();
     }
 
@@ -134,13 +139,33 @@ public class PaintArea extends JPanel implements MouseMotionListener {
     }
 
 
-    private class Position{
-        int x;
-        int y;
-        public Position(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
     }
 
+    @Override
+    public void mousePressed(MouseEvent e) {
+        mousePosition = e.getPoint();
+        // System.out.println("premuto");
+        muoviPezzo();
+        this.repaint();
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        mousePosition = e.getPoint();
+       // System.out.println("rilasciato");
+        this.repaint();
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }

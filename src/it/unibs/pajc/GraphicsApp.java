@@ -26,7 +26,6 @@ public class GraphicsApp extends JFrame {
      * Create the frame.
      */
     public GraphicsApp() {
-        ModelDama dama= new ModelDama();
         frame=new JFrame();
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

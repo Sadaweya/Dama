@@ -1,23 +1,33 @@
 package it.unibs.pajc;
 
 import java.awt.*;
-import java.util.List;
 
 
 public abstract class Pezzo {
-    List<?> mosse;
+
     enum Fazione{
         Bianco,
         Nero
     }
-    Fazione fazione;
 
-    public Pezzo(Fazione fazione, int position) {
-        this.fazione = fazione;
-        this.position = position;
+    enum Kind{
+        Pedina,
+        Damone;
     }
 
-    int position;
+    Fazione fazione;
+    Kind kind;
+
+    int x;
+    int y;
+
+    public Pezzo(Fazione fazione, Coordinates coordinates, Kind kind) {
+        this.fazione = fazione;
+        this.x = coordinates.x;
+        this.y = coordinates.y;
+        this.kind = kind;
+    }
+
 
     public Color getColor(){
         return fazione==Fazione.Bianco?Color.GRAY:Color.BLUE;
