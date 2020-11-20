@@ -1,14 +1,17 @@
-package it.unibs.pajc;
+package it.unibs.pajc.model;
 
+import it.unibs.pajc.Coordinates;
 import it.unibs.pajc.core.BaseModel;
 
 import javax.swing.event.ChangeEvent;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class ModelDama extends BaseModel {
-    ArrayList<Pezzo> pezzi=new ArrayList<>();
+    private HashMap<Integer,Pezzo> pezzi=new HashMap<>();
 
-    ModelDama(){
+    public ModelDama(){
 
         //creo i pezzi a inizio partita
 
@@ -31,13 +34,12 @@ public class ModelDama extends BaseModel {
     }
 
     public void addPezzo(Pezzo.Fazione fazione, Coordinates coordinates, boolean isDamone){
-        Pezzo.Kind kind=isDamone?Pezzo.Kind.Damone:Pezzo.Kind.Pedina;
-
-        pezzi.add(new Pedina(fazione, coordinates, kind));
+        Pezzo pezzo= isDamone?new Damone(fazione, coordinates):new Pedina(fazione, coordinates);
+        pezzi.put(pezzo.getId(),pezzo);
         fireValuesChange(new ChangeEvent(this));
 
     }
-
+/*
     public Pezzo isPresentPezzo(Coordinates coordinates){
 
       //  System.out.println(""+coordinates.x+":"+coordinates.y);
@@ -62,11 +64,15 @@ public class ModelDama extends BaseModel {
         for (Pezzo p:pezzi) {
             System.out.printf("\n%s\tx:%s y:%s \n",p.fazione,p.x,p.y);
         }
+    }*/
+
+    public Collection<Pezzo> getListaPezzi(){
+        return pezzi.values();
     }
 
     public void removePezzo(Pezzo p)
     {
-        pezzi.remove(p);
+        //pezzi.remove(p);
         fireValuesChange(new ChangeEvent(this));
 
     }
