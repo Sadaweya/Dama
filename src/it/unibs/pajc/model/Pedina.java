@@ -16,8 +16,8 @@ public class Pedina extends Pezzo{
     }
 
     @Override
-    public Color getColor() {
-        return fazione==Fazione.Bianco?Color.GRAY:Color.BLUE;
+    public Fazione getFazione() {
+        return fazione;
     }
 
 

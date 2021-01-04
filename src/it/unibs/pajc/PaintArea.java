@@ -7,7 +7,11 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class PaintArea extends JPanel implements MouseMotionListener, MouseListener {
@@ -15,8 +19,13 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
     int cellSize;
     Point mousePosition = null;
     private ModelDama modelDama;
+    private BufferedImage imgWhitePiece;
+    private BufferedImage imgBlackPiece;
 
-   //usando getter e setter posso creare diversi tipi di giochi(con diverse regole), Modeldama può diventare un interfaccia
+
+
+
+    //usando getter e setter posso creare diversi tipi di giochi(con diverse regole), Modeldama può diventare un interfaccia
     //devo quindi rendere tutto quello contenuto qui funzione del model (che può variare) Es la scacchiera 8x8 ma potrebbe cambiare
     public ModelDama getModelDama() {
         return modelDama;
@@ -31,6 +40,12 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
     public PaintArea() {
         this.addMouseMotionListener(this);
         this.addMouseListener(this);
+        try {
+            imgWhitePiece=ImageIO.read(new File("resources\\piece_white.png"));
+            imgBlackPiece = ImageIO.read(new File("resources\\piece_black.png"));
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
 
     }
 
@@ -47,7 +62,7 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
         cellSize= (w < h) ? w / 8 : h / 8;
 
         initScacchiera(g2);
-        paintCursor(g2);
+        //paintCursor(g2);
         coloraCella(g2);
 
     }
@@ -96,14 +111,19 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
 
     //cambiare con position
     private void paintPezzo(Graphics2D g, Pezzo p){
-        g.setColor(p.getColor());
         int x,y;
         //tramuto da coordinate logiche a coordinate fisiche
         x=(cellSize/7+(p.x)*cellSize)%(cellSize*8);
         y=cellSize/7+(p.y)*cellSize;
 
+        if(p.getFazione()== Pezzo.Fazione.Bianco)
+            g.drawImage(imgWhitePiece,x,y,cellSize*5/7,cellSize*5/7,this);
+        else
+            g.drawImage(imgBlackPiece,x,y,cellSize*5/7,cellSize*5/7,this);
 
-        g.fillOval(x,y, cellSize*5/7, cellSize*5/7);
+
+
+       //g.fillOval(x,y, cellSize*5/7, cellSize*5/7);
 
 
      /*   g.setColor(Color.GREEN);
@@ -158,7 +178,7 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
 
     @Override
     public void mousePressed(MouseEvent e) {
-        mousePosition = e.getPoint();
+
         // System.out.println("premuto");
         //muoviPezzo();
         this.repaint();
@@ -166,7 +186,7 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        mousePosition = e.getPoint();
+
        // System.out.println("rilasciato");
         this.repaint();
     }

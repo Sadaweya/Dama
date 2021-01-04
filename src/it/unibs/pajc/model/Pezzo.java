@@ -34,7 +34,7 @@ public abstract class Pezzo {
 
     public abstract boolean possoMuovere(Coordinates destinazione);
 
-    public abstract Color getColor();
+    public abstract Fazione getFazione();
 
 }
 
