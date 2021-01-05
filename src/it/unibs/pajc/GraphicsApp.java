@@ -1,4 +1,6 @@
 package it.unibs.pajc;
+import it.unibs.pajc.model.ModelDama;
+
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
@@ -32,6 +34,7 @@ public class GraphicsApp extends JFrame {
         frame.setBounds(0, 0, 600, 600);
         PaintArea paintArea = new PaintArea();
         frame.add(paintArea);
+        paintArea.setModelDama(new ModelDama());
     }
 
 }
