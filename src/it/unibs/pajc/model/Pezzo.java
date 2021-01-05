@@ -14,23 +14,17 @@ public abstract class Pezzo {
     }
 
     Fazione fazione;
-    public int x;
-    public int y;
-    private static int incrementalId;
-    private int id;
+    public Coordinates posizione;
+
 
 
     public Pezzo(Fazione fazione, Coordinates coordinates) {
         this.fazione = fazione;
-        this.x = coordinates.x;
-        this.y = coordinates.y;
-        this.id=incrementalId++;
+        this.posizione = coordinates;
     }
 
-    public int getId() {
-        return id;
-    }
 
+    public abstract boolean posizioneEquals(Coordinates coordinates);
 
     public abstract boolean possoMuovere(Coordinates destinazione);
 

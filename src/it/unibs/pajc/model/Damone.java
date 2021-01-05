@@ -11,6 +11,11 @@ public class Damone extends Pezzo {
     }
 
     @Override
+    public boolean posizioneEquals(Coordinates coordinates) {
+        return posizione.x==coordinates.x && posizione.y==coordinates.y;
+    }
+
+    @Override
     public boolean possoMuovere(Coordinates destinazione) {
         return false;
     }

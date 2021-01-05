@@ -4,12 +4,13 @@ import it.unibs.pajc.Coordinates;
 import it.unibs.pajc.core.BaseModel;
 
 import javax.swing.event.ChangeEvent;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 public class ModelDama extends BaseModel {
-    private HashMap<Integer,Pezzo> pezzi=new HashMap<>();
+    private ArrayList<Pezzo> pezzi=new ArrayList<>();
 
     public ModelDama(){
 
@@ -35,7 +36,7 @@ public class ModelDama extends BaseModel {
 
     public void addPezzo(Pezzo.Fazione fazione, Coordinates coordinates, boolean isDamone){
         Pezzo pezzo= isDamone?new Damone(fazione, coordinates):new Pedina(fazione, coordinates);
-        pezzi.put(pezzo.getId(),pezzo);
+        pezzi.add(pezzo);
         fireValuesChange(new ChangeEvent(this));
 
     }
@@ -67,7 +68,7 @@ public class ModelDama extends BaseModel {
     }*/
 
     public Collection<Pezzo> getListaPezzi(){
-        return pezzi.values();
+        return pezzi;
     }
 
     public void removePezzo(Pezzo p)
@@ -77,10 +78,44 @@ public class ModelDama extends BaseModel {
 
     }
 
+    public ArrayList<Coordinates> showMosse(Coordinates c){
+        ArrayList<Coordinates> temp=new ArrayList<>();
+        //System.out.printf("x: %d\ny: %d\n",c.x,c.y);
+        Pezzo p=null;//c != da coordinate usate come chiave
+
+        for (Pezzo pezzo:pezzi) {
+            if(pezzo.posizioneEquals(c)){
+                p = pezzo;
+               // System.out.println("trovato");
+                break;
+            }
+           // System.out.println("non trovato");
+        }
+
+
+        if(p!=null){
+          // System.out.print("p!=null\n");
+            int y;
+
+            if(p.fazione== Pezzo.Fazione.Bianco)
+                y=c.y+1;
+            else
+                y=c.y-1;
+
+            temp.add(new Coordinates(c.x-1,y));
+            temp.add(new Coordinates(c.x+1,y));
+            //qui vanno aggiunti i controlli per verificare che le posse siano davvero disponibili
+            return temp;
+        }
+        else
+            return null;
+
+
+    }
+
     public boolean movePezzo(Pezzo p, Coordinates nuovaPosizione){
         //da fare dei ceck su nuova posizione
-        p.x=nuovaPosizione.x;
-        p.y=nuovaPosizione.y;
+        p.posizione=nuovaPosizione;
         fireValuesChange(new ChangeEvent(this));
         return true;
     }

@@ -11,6 +11,15 @@ public class Pedina extends Pezzo{
     }
 
     @Override
+    public boolean posizioneEquals(Coordinates coordinates) {
+        return posizione.x==coordinates.x && posizione.y==coordinates.y;
+    }
+
+    public void setCoordinates(Coordinates coordinates){
+        this.posizione=coordinates;
+    }
+
+    @Override
     public boolean possoMuovere(Coordinates destinazione) {
         return false;
     }

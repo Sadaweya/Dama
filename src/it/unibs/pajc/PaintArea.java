@@ -10,6 +10,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -18,6 +19,9 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
 
     int cellSize;
     Point mousePosition = null;
+    Point mouseSelection= null;
+    private ArrayList<Coordinates> possiblePositions;
+    boolean positionSelected=false;
     private ModelDama modelDama;
     private BufferedImage imgWhitePiece;
     private BufferedImage imgBlackPiece;
@@ -46,7 +50,6 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-
     }
 
     protected void paintComponent(Graphics g) {
@@ -56,18 +59,17 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
         // per lavorare con graphics2d, che è molto più recente
         Graphics2D g2=(Graphics2D)g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-
-
-        int cancellami;
-
         int w = getWidth();
         int h = getHeight();
         cellSize= (w < h) ? w / 8 : h / 8;
 
-        initScacchiera(g2);
+        initScacchiera(g2);//colora la scacchiera e inserisce tutte le pedine(rimaste)
+        if(possiblePositions!=null&&!possiblePositions.isEmpty()){
+            for (Coordinates c:possiblePositions) {
+                coloraCella(g2,c);
+            }
+        }
         //paintCursor(g2);
-        coloraCella(g2);
-
     }
 
     private void initScacchiera(Graphics2D g){
@@ -98,9 +100,12 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
         }
     }
 
-    private void coloraCella(Graphics2D g){
+    private void coloraCella(Graphics2D g, Coordinates coordinates){
         g.setColor(Color.MAGENTA);
-        if(mousePosition!=null){
+        g.setStroke(new BasicStroke(3));
+        g.drawRect(coordinates.x*cellSize,coordinates.y*cellSize,cellSize,cellSize);
+
+        /*if(mousePosition!=null){
             Coordinates p=calcolaCellaDaPuntatore();
             g.setStroke(new BasicStroke(3));
             try{
@@ -109,31 +114,20 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
             }catch (NullPointerException pointerException){
 
             }
-        }
+        }*/
     }
 
     //cambiare con position
     private void paintPezzo(Graphics2D g, Pezzo p){
         int x,y;
         //tramuto da coordinate logiche a coordinate fisiche
-        x=(cellSize/7+(p.x)*cellSize)%(cellSize*8);
-        y=cellSize/7+(p.y)*cellSize;
+        x=(cellSize/7+(p.posizione.x)*cellSize)%(cellSize*8);
+        y=cellSize/7+(p.posizione.y)*cellSize;
 
         if(p.getFazione()== Pezzo.Fazione.Bianco)
             g.drawImage(imgWhitePiece,x,y,cellSize*5/7,cellSize*5/7,this);
         else
             g.drawImage(imgBlackPiece,x,y,cellSize*5/7,cellSize*5/7,this);
-
-
-
-       //g.fillOval(x,y, cellSize*5/7, cellSize*5/7);
-
-
-     /*   g.setColor(Color.GREEN);
-        g.drawString("" + p.x+":"+p.y , x, y);*/
-      //  g.setColor(Color.CYAN);
-     //   g.drawString("" +temp , x+50, y);
-
     }
 
     private Coordinates calcolaCellaDaPuntatore(){
@@ -176,7 +170,11 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
+        mouseSelection=e.getPoint();
+        Coordinates p=calcolaCellaDaPuntatore();
+        possiblePositions=modelDama.showMosse(p);
+        possiblePositions.add(p);
+        repaint();
     }
 
     @Override
