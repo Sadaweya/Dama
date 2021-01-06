@@ -9,4 +9,15 @@ public class Coordinates {
         this.y = y;
     }
 
+    public boolean equals(Coordinates coordinates){
+        return this.x==coordinates.x && this.y==coordinates.y;
+    }
+
+    @Override
+    public String toString() {
+        return "Coordinates{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

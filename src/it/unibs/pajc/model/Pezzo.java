@@ -24,7 +24,8 @@ public abstract class Pezzo {
     }
 
 
-    public abstract boolean posizioneEquals(Coordinates coordinates);
+
+    public abstract boolean equals(Coordinates coordinates);
 
     public abstract boolean possoMuovere(Coordinates destinazione);
 

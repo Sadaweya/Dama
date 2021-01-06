@@ -69,6 +69,15 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
                 coloraCella(g2,c);
             }
         }
+
+        /*
+        for (Pezzo p:modelDama.getListaPezzi()) {
+            System.out.printf("[%d,%d]\n",p.posizione.x,p.posizione.y);
+        }
+
+         */
+
+
         //paintCursor(g2);
     }
 
@@ -171,9 +180,29 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
     @Override
     public void mouseClicked(MouseEvent e) {
         mouseSelection=e.getPoint();
-        Coordinates p=calcolaCellaDaPuntatore();
-        possiblePositions=modelDama.showMosse(p);
-        possiblePositions.add(p);
+        Coordinates cellaCliccata=calcolaCellaDaPuntatore();
+        boolean success=false;
+        if(possiblePositions!=null){
+            //System.out.println("possible positions != null");
+           // int i=1;
+            for (Coordinates possiblePosition:possiblePositions) {
+               // System.out.println(possiblePosition+"\n"+i++);
+                //System.out.println(cellaCliccata);
+                //System.out.println("controllo se cella cliccata è una delle celle illuminate: "+cellaCliccata.equals(possiblePosition));
+                if(cellaCliccata.equals(possiblePosition)){
+                   // System.out.println("Cliccato un movimento valido");
+
+                    success=modelDama.movePezzo(possiblePositions.get(0),cellaCliccata);
+                    possiblePositions=null;
+                    //System.out.printf("success: %s\n",success);
+                    break;
+                }
+            }
+        }
+        if(!success){
+            possiblePositions=modelDama.showMosse(cellaCliccata);
+        }
+        //aggiungere controllo se posizione premuta è una delle posizioni possibili precedenti
         repaint();
     }
 

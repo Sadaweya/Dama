@@ -13,7 +13,7 @@ public class ModelDama extends BaseModel {
     private ArrayList<Pezzo> pezzi=new ArrayList<>();
 
     public ModelDama(){
-
+        //addPezzo(Pezzo.Fazione.Bianco,new Coordinates(0,1),false);
         //creo i pezzi a inizio partita
 
         for(int y=0;y<3;y++){
@@ -79,22 +79,16 @@ public class ModelDama extends BaseModel {
     }
 
     public ArrayList<Coordinates> showMosse(Coordinates c){
-        ArrayList<Coordinates> temp=new ArrayList<>();
+        ArrayList<Coordinates> listaPosizioniValide=new ArrayList<>();
         //System.out.printf("x: %d\ny: %d\n",c.x,c.y);
         Pezzo p=null;//c != da coordinate usate come chiave
 
-        for (Pezzo pezzo:pezzi) {
-            if(pezzo.posizioneEquals(c)){
-                p = pezzo;
-               // System.out.println("trovato");
-                break;
-            }
-           // System.out.println("non trovato");
-        }
+        p=getPezzo(c);
 
 
         if(p!=null){
           // System.out.print("p!=null\n");
+            listaPosizioniValide.add(new Coordinates(c.x,c.y));
             int y;
 
             if(p.fazione== Pezzo.Fazione.Bianco)
@@ -102,10 +96,15 @@ public class ModelDama extends BaseModel {
             else
                 y=c.y-1;
 
-            temp.add(new Coordinates(c.x-1,y));
-            temp.add(new Coordinates(c.x+1,y));
-            //qui vanno aggiunti i controlli per verificare che le posse siano davvero disponibili
-            return temp;
+
+            //posizione di partenza viene illuminata
+            Coordinates temp=new Coordinates(c.x-1,y);
+            if(isValidMovement(temp))
+                listaPosizioniValide.add(temp);
+            temp=new Coordinates(c.x+1,y);
+            if(isValidMovement(temp))
+                listaPosizioniValide.add(temp);
+            return listaPosizioniValide;
         }
         else
             return null;
@@ -113,10 +112,55 @@ public class ModelDama extends BaseModel {
 
     }
 
-    public boolean movePezzo(Pezzo p, Coordinates nuovaPosizione){
-        //da fare dei ceck su nuova posizione
-        p.posizione=nuovaPosizione;
+    public boolean isValidMovement(Coordinates c){
+/*
+        System.out.println("pezzo presente: "+!isPresentPezzoOnPosition(c));
+        System.out.println("x<8: "+(c.x<8));
+        System.out.println("x>0: "+(c.x>=0));
+        System.out.println("y>0: "+(c.y>=0));
+        System.out.println("y<8: "+(c.y<8));
+
+ */
+        return (!isPresentPezzoOnPosition(c) && c.x<8 && c.x>=0 && c.y>=0 && c.y<8);
+
+
+    }
+    public boolean isPresentPezzoOnPosition(Coordinates posizione){
+        for (Pezzo pezzo:pezzi) {
+            if(pezzo.equals(posizione)){
+                return true;
+                // System.out.println("trovato");
+            }
+            // System.out.println("non trovato");
+        }
+        return false;
+    }
+
+    private Pezzo getPezzo(Coordinates c){
+        Pezzo p = null;
+        for (Pezzo pezzo:pezzi) {
+            if(pezzo.equals(c)){
+                p = pezzo;
+                break;
+            }
+        }
+        return p;
+    }
+
+    public boolean movePezzo(Coordinates posizioneAttuale, Coordinates nuovaPosizione){
+        boolean success=false;
+        Pezzo p=getPezzo(posizioneAttuale);
+
+        ArrayList<Coordinates> possibiliMosse= showMosse(p.posizione);
+        for (Coordinates coordinates:possibiliMosse) {
+            if (nuovaPosizione.equals(coordinates)) {
+                p.posizione = nuovaPosizione;
+                success = true;
+                break;
+            }
+        }
+
         fireValuesChange(new ChangeEvent(this));
-        return true;
+        return success;
     }
 }
