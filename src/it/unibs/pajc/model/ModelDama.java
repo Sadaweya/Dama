@@ -88,43 +88,52 @@ public class ModelDama extends BaseModel {
 
         if(p!=null){
           // System.out.print("p!=null\n");
-            listaPosizioniValide.add(new Coordinates(c.x,c.y));
-            int y;
+            listaPosizioniValide.add(new Coordinates(c.x,c.y)); //posizione di partenza viene illuminata
 
+            int y;
             if(p.fazione== Pezzo.Fazione.Bianco)
                 y=c.y+1;
             else
                 y=c.y-1;
-
-
-            //posizione di partenza viene illuminata
+            //  QUI CONTROLLO SE LE CELLE SONO DENTRO LA SCACCHIERA E LIBERE E IN CASO LE ILLUMINO
+            //  FUNZIONE RICORSIVA (LISTA CELLE CONTROLLA CELLA SUCCESSIVA)
             Coordinates temp=new Coordinates(c.x-1,y);
-            if(isValidMovement(temp))
-                listaPosizioniValide.add(temp);
+            if(isWithinBounds(temp) && !isPresentPezzoOnPosition(temp)){
+                    listaPosizioniValide.add(temp);
+            }else if(isWithinBounds(temp) && getPezzo(temp).fazione!=getPezzo(c).fazione){
+                listaPosizioniValide.addAll(concatenaMosse(temp));
+            }
+
             temp=new Coordinates(c.x+1,y);
-            if(isValidMovement(temp))
+            if(isWithinBounds(temp) && !isPresentPezzoOnPosition(temp)){
                 listaPosizioniValide.add(temp);
+            }else if(isWithinBounds(temp) && getPezzo(temp).fazione!=getPezzo(c).fazione){
+                listaPosizioniValide.addAll(concatenaMosse(temp));
+            }
+
             return listaPosizioniValide;
         }
         else
             return null;
-
+    }
+    private ArrayList<Coordinates> concatenaMosse(Coordinates posizione){
+        ArrayList<Coordinates> mosse =new ArrayList<>();
+        
+        return mosse;
 
     }
 
-    public boolean isValidMovement(Coordinates c){
+    public boolean isWithinBounds(Coordinates c){
 /*
         System.out.println("pezzo presente: "+!isPresentPezzoOnPosition(c));
         System.out.println("x<8: "+(c.x<8));
         System.out.println("x>0: "+(c.x>=0));
         System.out.println("y>0: "+(c.y>=0));
         System.out.println("y<8: "+(c.y<8));
-
  */
-        return (!isPresentPezzoOnPosition(c) && c.x<8 && c.x>=0 && c.y>=0 && c.y<8);
-
-
+        return (c.x<8 && c.x>=0 && c.y>=0 && c.y<8);
     }
+
     public boolean isPresentPezzoOnPosition(Coordinates posizione){
         for (Pezzo pezzo:pezzi) {
             if(pezzo.equals(posizione)){
