@@ -201,6 +201,7 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
         }
         if(!success){
             possiblePositions=modelDama.showMosse(cellaCliccata);
+            System.out.println(possiblePositions);
         }
         //aggiungere controllo se posizione premuta è una delle posizioni possibili precedenti
         repaint();

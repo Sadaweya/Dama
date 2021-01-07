@@ -3,6 +3,7 @@ package it.unibs.pajc.model;
 import it.unibs.pajc.Coordinates;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 
 public abstract class Pezzo {
@@ -15,6 +16,7 @@ public abstract class Pezzo {
 
     Fazione fazione;
     public Coordinates posizione;
+    public ArrayList<Pezzo> pezziMangiati;
 
 
 

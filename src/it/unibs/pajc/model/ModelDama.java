@@ -1,5 +1,6 @@
 package it.unibs.pajc.model;
 
+import com.sun.jdi.ArrayReference;
 import it.unibs.pajc.Coordinates;
 import it.unibs.pajc.core.BaseModel;
 
@@ -75,106 +76,121 @@ public class ModelDama extends BaseModel {
 
     }
 
-    /**
-     * pseudocodice
-     * ottengo la posizione iniziale del pezzo,
-     *
-     * @param c posizione del pezzo iniziale
-     * @return la lista delle posizioni in cui quel pezzo si può muovere comprese le celle con pezzi nemici che può mangiare
-     */
-    public ArrayList<ArrayList<Coordinates>> showMosse(Coordinates c){
-        //System.out.printf("x: %d\ny: %d\n",c.x,c.y);
-        Pezzo p=null;//c != da coordinate usate come chiave
-        p=getPezzo(c);
-
-        if(p!=null){
-            ArrayList<ArrayList<Coordinates>> listaPercorsiValidi=new ArrayList<>();
-            ArrayList<Coordinates> listaPosizioniValide=new ArrayList<>();
-            // System.out.print("p!=null\n");
-            listaPosizioniValide.add(new Coordinates(c.x,c.y)); //posizione di partenza viene illuminata
-
-            int y;
-            Pezzo.Fazione fazione=p.fazione;
-            if(p.fazione== Pezzo.Fazione.Bianco)
-                y=c.y+1;
-            else
-                y=c.y-1;
-
-            //  QUI CONTROLLO SE LE CELLE SONO DENTRO LA SCACCHIERA E LIBERE E IN CASO LE ILLUMINO
-            //  FUNZIONE RICORSIVA (LISTA CELLE CONTROLLA CELLA SUCCESSIVA)
-            Coordinates temp=new Coordinates(c.x-1,y);
-                sviluppaRamo(temp,fazione)
-
-
-            temp=new Coordinates(c.x+1,y);
-            if(isWithinBounds(temp) && !isPresentPezzoOnPosition(temp)){
-                listaPosizioniValide.add(temp);
-            }else if(isWithinBounds(temp) && getPezzo(temp).fazione!=getPezzo(c).fazione){
-                listaPosizioniValide.addAll(concatenaMosse(c,temp));
-            }
-
-            return listaPercorsiValidi;
-        }
-        else
-            return null;
-    }
-    private void sviluppaRamo(ArrayList<Coordinates> ramo, Pezzo.Fazione fazione){
-        if(isWithinBounds(temp) && !isPresentPezzoOnPosition(temp)){
-            listaPosizioniValide.add(temp);
-        }else if(isWithinBounds(temp) && getPezzo(temp).fazione!=getPezzo(c).fazione){
-            listaPosizioniValide.addAll(concatenaMosse(c,temp));
-        }
-    }
-
-/*
-SHOW MOSSE ORIGINALE SOPRA UN TENTATIVO AD ALBERO
     public ArrayList<Coordinates> showMosse(Coordinates c){
+        return showMosse(getPezzo(c));
+    }
+    public ArrayList<Coordinates> showMosse(Pezzo pezzo){
         ArrayList<Coordinates> listaPosizioniValide=new ArrayList<>();
 
         //System.out.printf("x: %d\ny: %d\n",c.x,c.y);
-        Pezzo p=null;//c != da coordinate usate come chiave
 
-        p=getPezzo(c);
-
-
-        if(p!=null){
+        if(pezzo!=null){
           // System.out.print("p!=null\n");
-            listaPosizioniValide.add(new Coordinates(c.x,c.y)); //posizione di partenza viene illuminata
+            listaPosizioniValide.add(new Coordinates(pezzo.posizione.x,pezzo.posizione.y)); //posizione di partenza viene illuminata
 
             int y;
-            if(p.fazione== Pezzo.Fazione.Bianco)
-                y=c.y+1;
+            if(pezzo.fazione== Pezzo.Fazione.Bianco)
+                y=pezzo.posizione.y+1;
             else
-                y=c.y-1;
-            //  QUI CONTROLLO SE LE CELLE SONO DENTRO LA SCACCHIERA E LIBERE E IN CASO LE ILLUMINO
-            //  FUNZIONE RICORSIVA (LISTA CELLE CONTROLLA CELLA SUCCESSIVA)
-            Coordinates temp=new Coordinates(c.x-1,y);
+                y=pezzo.posizione.y-1;
+
+            Coordinates temp=new Coordinates(pezzo.posizione.x-1,y);
+            if(isWithinBounds(temp) && !isPresentPezzoOnPosition(temp))
+                listaPosizioniValide.add(temp);
+            else if (isWithinBounds(temp) && isPresentPezzoOnPosition(temp) && getPezzo(temp).fazione!=pezzo.fazione)
+                    listaPosizioniValide.addAll(ceck(new Coordinates(pezzo.posizione.x-1,y),pezzo,"sx"));
+
+
+            temp=new Coordinates(pezzo.posizione.x+1,y);
+            if(isWithinBounds(temp) && !isPresentPezzoOnPosition(temp))
+                listaPosizioniValide.add(temp);
+            else if (isWithinBounds(temp) && isPresentPezzoOnPosition(temp) && getPezzo(temp).fazione!=pezzo.fazione)
+                    listaPosizioniValide.addAll(ceck(new Coordinates(pezzo.posizione.x+1,y),pezzo,"dx"));
+
+
+            /*
             if(isWithinBounds(temp) && !isPresentPezzoOnPosition(temp)){
                 listaPosizioniValide.add(temp);
-            }else if(isWithinBounds(temp) && getPezzo(temp).fazione!=getPezzo(c).fazione){
-                listaPosizioniValide.addAll(concatenaMosse(c,temp));
+            }else if(isWithinBounds(temp) && getPezzo(temp).fazione!=getPezzo(pezzo.posizione).fazione){
+
+                int yt;
+                if(pezzo.fazione== Pezzo.Fazione.Bianco)
+                    yt=pezzo.posizione.y+2;
+                else
+                    yt=pezzo.posizione.y-2;
+
+                Coordinates temp2=new Coordinates(pezzo.posizione.x-2,yt);
+                if(isWithinBounds(temp2) && !isPresentPezzoOnPosition(temp2)){
+                    listaPosizioniValide.add(temp);//pedina da mangiare
+                    listaPosizioniValide.add(temp2);
+                }
             }
 
-            temp=new Coordinates(c.x+1,y);
+             */
+
+
+            /*
             if(isWithinBounds(temp) && !isPresentPezzoOnPosition(temp)){
                 listaPosizioniValide.add(temp);
-            }else if(isWithinBounds(temp) && getPezzo(temp).fazione!=getPezzo(c).fazione){
-                listaPosizioniValide.addAll(concatenaMosse(c,temp));
+            }else if(isWithinBounds(temp) && getPezzo(temp).fazione!=getPezzo(pezzo.posizione).fazione){
+                int yt;
+                if(pezzo.fazione== Pezzo.Fazione.Bianco)
+                    yt=pezzo.posizione.y+2;
+                else
+                    yt=pezzo.posizione.y-2;
+                Coordinates temp2=new Coordinates(pezzo.posizione.x+2,yt);
+                if(isWithinBounds(temp2) && !isPresentPezzoOnPosition(temp2)){
+                    listaPosizioniValide.add(temp);//pedina da mangiare
+                    listaPosizioniValide.add(temp2);
+                }
             }
 
+             */
+            System.out.println(listaPosizioniValide);
             return listaPosizioniValide;
         }
         else
             return null;
-    }*/
+    }
 
 
-    private ArrayList<Coordinates> concatenaMosse(Coordinates posizioneIniziale, Coordinates enemy){
-        ArrayList<Coordinates> mosse =new ArrayList<>();
+    private ArrayList<Coordinates> ceck(Coordinates cella, Pezzo pezzo,String direzione){
+        ArrayList<Coordinates> listaPosizioniValide =new ArrayList<>();
+        System.out.println("sono qui per: "+cella);
 
-       // getPezzo(posizioneIniziale).fazione==Pezzo.Fazione.Bianco;
+            int y;
+            if(pezzo.fazione== Pezzo.Fazione.Bianco)
+                y=cella.y+1;
+            else
+                y=cella.y-1;
+            Coordinates cellaSuccessiva;
+            if(direzione.equals("sx"))
+                cellaSuccessiva=new Coordinates(cella.x-1,y);
+            else
+                cellaSuccessiva=new Coordinates(cella.x+1,y);
 
-        return mosse;
+            if(isWithinBounds(cellaSuccessiva) && !isPresentPezzoOnPosition(cellaSuccessiva)){
+                System.out.println("posso mangiare "+cella);
+                listaPosizioniValide.add(cella);//pedina da mangiare
+                listaPosizioniValide.add(cellaSuccessiva);//posizione futura
+
+                if(pezzo.fazione== Pezzo.Fazione.Bianco)
+                    y++;
+                else
+                    y--;
+
+                Coordinates temp=new Coordinates(cellaSuccessiva.x-1,y);
+                if (isWithinBounds(temp) && isPresentPezzoOnPosition(temp) && getPezzo(temp).fazione!=pezzo.fazione){
+                    listaPosizioniValide.addAll(ceck(new Coordinates(pezzo.posizione.x-1,y),pezzo,"sx"));
+                }
+
+                temp= new Coordinates(cellaSuccessiva.x+1,y);
+                if (isWithinBounds(temp) && isPresentPezzoOnPosition(temp) && getPezzo(temp).fazione!=pezzo.fazione){
+                    listaPosizioniValide.addAll(ceck(new Coordinates(pezzo.posizione.x+1,y),pezzo,"dx"));
+                }
+
+            }
+        return listaPosizioniValide;
     }
 
     public boolean isWithinBounds(Coordinates c){
@@ -217,8 +233,14 @@ SHOW MOSSE ORIGINALE SOPRA UN TENTATIVO AD ALBERO
         //controllo su eated pieces per vedere quali sono sul percorso
 
         ArrayList<Coordinates> possibiliMosse= showMosse(p.posizione);
+
         for (Coordinates coordinates:possibiliMosse) {
-            if (nuovaPosizione.equals(coordinates)) {
+            if (nuovaPosizione.equals(coordinates) && getPezzo(nuovaPosizione)==null) {
+                if(Math.abs(nuovaPosizione.y-coordinates.y)>1){
+                    if((nuovaPosizione.x-coordinates.x)>0){
+
+                    }
+                }
                 p.posizione = nuovaPosizione;
                 success = true;
                 break;
