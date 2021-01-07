@@ -4,10 +4,8 @@ import it.unibs.pajc.Coordinates;
 import it.unibs.pajc.core.BaseModel;
 
 import javax.swing.event.ChangeEvent;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
 public class ModelDama extends BaseModel {
     private ArrayList<Pezzo> pezzi=new ArrayList<>();
@@ -71,15 +69,68 @@ public class ModelDama extends BaseModel {
         return pezzi;
     }
 
-    public void removePezzo(Pezzo p)
-    {
+    public void removePezzo(Pezzo p){
         //pezzi.remove(p);
         fireValuesChange(new ChangeEvent(this));
 
     }
 
+    /**
+     * pseudocodice
+     * ottengo la posizione iniziale del pezzo,
+     *
+     * @param c posizione del pezzo iniziale
+     * @return la lista delle posizioni in cui quel pezzo si può muovere comprese le celle con pezzi nemici che può mangiare
+     */
+    public ArrayList<ArrayList<Coordinates>> showMosse(Coordinates c){
+        //System.out.printf("x: %d\ny: %d\n",c.x,c.y);
+        Pezzo p=null;//c != da coordinate usate come chiave
+        p=getPezzo(c);
+
+        if(p!=null){
+            ArrayList<ArrayList<Coordinates>> listaPercorsiValidi=new ArrayList<>();
+            ArrayList<Coordinates> listaPosizioniValide=new ArrayList<>();
+            // System.out.print("p!=null\n");
+            listaPosizioniValide.add(new Coordinates(c.x,c.y)); //posizione di partenza viene illuminata
+
+            int y;
+            Pezzo.Fazione fazione=p.fazione;
+            if(p.fazione== Pezzo.Fazione.Bianco)
+                y=c.y+1;
+            else
+                y=c.y-1;
+
+            //  QUI CONTROLLO SE LE CELLE SONO DENTRO LA SCACCHIERA E LIBERE E IN CASO LE ILLUMINO
+            //  FUNZIONE RICORSIVA (LISTA CELLE CONTROLLA CELLA SUCCESSIVA)
+            Coordinates temp=new Coordinates(c.x-1,y);
+                sviluppaRamo(temp,fazione)
+
+
+            temp=new Coordinates(c.x+1,y);
+            if(isWithinBounds(temp) && !isPresentPezzoOnPosition(temp)){
+                listaPosizioniValide.add(temp);
+            }else if(isWithinBounds(temp) && getPezzo(temp).fazione!=getPezzo(c).fazione){
+                listaPosizioniValide.addAll(concatenaMosse(c,temp));
+            }
+
+            return listaPercorsiValidi;
+        }
+        else
+            return null;
+    }
+    private void sviluppaRamo(ArrayList<Coordinates> ramo, Pezzo.Fazione fazione){
+        if(isWithinBounds(temp) && !isPresentPezzoOnPosition(temp)){
+            listaPosizioniValide.add(temp);
+        }else if(isWithinBounds(temp) && getPezzo(temp).fazione!=getPezzo(c).fazione){
+            listaPosizioniValide.addAll(concatenaMosse(c,temp));
+        }
+    }
+
+/*
+SHOW MOSSE ORIGINALE SOPRA UN TENTATIVO AD ALBERO
     public ArrayList<Coordinates> showMosse(Coordinates c){
         ArrayList<Coordinates> listaPosizioniValide=new ArrayList<>();
+
         //System.out.printf("x: %d\ny: %d\n",c.x,c.y);
         Pezzo p=null;//c != da coordinate usate come chiave
 
@@ -99,28 +150,31 @@ public class ModelDama extends BaseModel {
             //  FUNZIONE RICORSIVA (LISTA CELLE CONTROLLA CELLA SUCCESSIVA)
             Coordinates temp=new Coordinates(c.x-1,y);
             if(isWithinBounds(temp) && !isPresentPezzoOnPosition(temp)){
-                    listaPosizioniValide.add(temp);
+                listaPosizioniValide.add(temp);
             }else if(isWithinBounds(temp) && getPezzo(temp).fazione!=getPezzo(c).fazione){
-                listaPosizioniValide.addAll(concatenaMosse(temp));
+                listaPosizioniValide.addAll(concatenaMosse(c,temp));
             }
 
             temp=new Coordinates(c.x+1,y);
             if(isWithinBounds(temp) && !isPresentPezzoOnPosition(temp)){
                 listaPosizioniValide.add(temp);
             }else if(isWithinBounds(temp) && getPezzo(temp).fazione!=getPezzo(c).fazione){
-                listaPosizioniValide.addAll(concatenaMosse(temp));
+                listaPosizioniValide.addAll(concatenaMosse(c,temp));
             }
 
             return listaPosizioniValide;
         }
         else
             return null;
-    }
-    private ArrayList<Coordinates> concatenaMosse(Coordinates posizione){
-        ArrayList<Coordinates> mosse =new ArrayList<>();
-        
-        return mosse;
+    }*/
 
+
+    private ArrayList<Coordinates> concatenaMosse(Coordinates posizioneIniziale, Coordinates enemy){
+        ArrayList<Coordinates> mosse =new ArrayList<>();
+
+       // getPezzo(posizioneIniziale).fazione==Pezzo.Fazione.Bianco;
+
+        return mosse;
     }
 
     public boolean isWithinBounds(Coordinates c){
@@ -159,6 +213,8 @@ public class ModelDama extends BaseModel {
     public boolean movePezzo(Coordinates posizioneAttuale, Coordinates nuovaPosizione){
         boolean success=false;
         Pezzo p=getPezzo(posizioneAttuale);
+
+        //controllo su eated pieces per vedere quali sono sul percorso
 
         ArrayList<Coordinates> possibiliMosse= showMosse(p.posizione);
         for (Coordinates coordinates:possibiliMosse) {
