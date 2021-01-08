@@ -37,34 +37,7 @@ public class ModelDama extends BaseModel {
         Pezzo pezzo= isDamone?new Damone(fazione, coordinates):new Pedina(fazione, coordinates);
         pezzi.add(pezzo);
         fireValuesChange(new ChangeEvent(this));
-
     }
-/*
-    public Pezzo isPresentPezzo(Coordinates coordinates){
-
-      //  System.out.println(""+coordinates.x+":"+coordinates.y);
-        //printPezzi();
-        for (Pezzo p:pezzi) {
-            if(p.x==coordinates.x){
-               // System.out.println("Stessa x");
-
-                if(p.y==coordinates.y)
-                {
-                  //  System.out.println("pezzo trovato");
-
-                    return p;
-                }
-            }
-        }
-        System.out.println("pezzo non trovato");
-        return null;
-    }
-
-    public void printPezzi(){
-        for (Pezzo p:pezzi) {
-            System.out.printf("\n%s\tx:%s y:%s \n",p.fazione,p.x,p.y);
-        }
-    }*/
 
     public Collection<Pezzo> getListaPezzi(){
         return pezzi;

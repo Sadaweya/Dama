@@ -116,17 +116,6 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
             g.setColor(Color.YELLOW);
         g.setStroke(new BasicStroke(3));
         g.drawRect(coordinates.x*cellSize,coordinates.y*cellSize,cellSize,cellSize);
-
-        /*if(mousePosition!=null){
-            Coordinates p=calcolaCellaDaPuntatore();
-            g.setStroke(new BasicStroke(3));
-            try{
-                if((p.x+p.y)%2!=0)
-                    g.drawRect(p.x*cellSize,p.y*cellSize,cellSize,cellSize);
-            }catch (NullPointerException pointerException){
-
-            }
-        }*/
     }
 
     //cambiare con position
@@ -150,25 +139,6 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
         return new Coordinates(x,y);
     }
 
-    /*
-    private void muoviPezzo(Graphics g){
-        Coordinates temp=calcolaCellaDaPuntatore();
-       // System.out.println("entro muovi pezzo");
-
-        Pezzo p=modelDama.isPresentPezzo(temp);
-
-        if(p!=null){
-          //  System.out.println("pezzo diverso da nullo");
-            if(mousePosition != null) {
-                g.setColor(Color.red);
-               // System.out.println("posizione mouse diversa da nulla");
-                g.fillOval(mousePosition.x, mousePosition.y, cellSize*5/7, cellSize*5/7);
-            }
-        }
-    }*/
-
-
-
     public void mouseDragged(MouseEvent e) {
         mousePosition = e.getPoint(); // x, y
         this.repaint();
@@ -178,7 +148,6 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
         mousePosition = e.getPoint(); // x, y
         this.repaint();
     }
-
 
     @Override
     public void mouseClicked(MouseEvent e) {
