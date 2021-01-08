@@ -183,14 +183,12 @@ public class ModelDama extends BaseModel {
 
                 Coordinates temp=new Coordinates(cellaSuccessiva.x-1,y);
                 //System.out.println("questa è la cella successiva"+cellaSuccessiva);
-                if (isWithinBounds(temp) && isPresentPezzoOnPosition(temp) && getPezzo(temp).fazione!=pezzo.fazione){
+                if (isWithinBounds(temp) && isPresentPezzoOnPosition(temp) && getPezzo(temp).fazione!=pezzo.fazione)
                     listaPosizioniValide.addAll(ceck(new Coordinates(cellaSuccessiva.x-1,y),pezzo,"sx"));
-                }
 
                 temp= new Coordinates(cellaSuccessiva.x+1,y);
-                if (isWithinBounds(temp) && isPresentPezzoOnPosition(temp) && getPezzo(temp).fazione!=pezzo.fazione){
+                if (isWithinBounds(temp) && isPresentPezzoOnPosition(temp) && getPezzo(temp).fazione!=pezzo.fazione)
                     listaPosizioniValide.addAll(ceck(new Coordinates(cellaSuccessiva.x+1,y),pezzo,"dx"));
-                }
 
             }
         return listaPosizioniValide;
@@ -237,15 +235,8 @@ public class ModelDama extends BaseModel {
 
         for (Coordinates coordinates:possibiliMosse) {
             if (nuovaPosizione.equals(coordinates) && getPezzo(nuovaPosizione)==null) {
-                if(Math.abs(nuovaPosizione.y-posizioneAttuale.y)==2){
-                    if((posizioneAttuale.x-nuovaPosizione.x)>0)
-                        //System.out.println("mangio pezzo: "+new Coordinates(posizioneAttuale.x-1,(posizioneAttuale.y+ nuovaPosizione.y)/2));
-                        removePezzo(getPezzo(new Coordinates(posizioneAttuale.x-1,(posizioneAttuale.y+ nuovaPosizione.y)/2)));
-                    else
-                        //System.out.println("mangio pezzo: "+new Coordinates(posizioneAttuale.x+1,(posizioneAttuale.y+ nuovaPosizione.y)/2));
-                        removePezzo(getPezzo(new Coordinates(posizioneAttuale.x+1,(posizioneAttuale.y+ nuovaPosizione.y)/2)));
-
-                }
+                if(Math.abs(nuovaPosizione.y-posizioneAttuale.y)==2)
+                        removePezzo(getPezzo(new Coordinates((posizioneAttuale.x+nuovaPosizione.x)/2,(posizioneAttuale.y+ nuovaPosizione.y)/2)));
                 p.posizione = nuovaPosizione;
                 success = true;
                 break;
