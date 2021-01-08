@@ -156,7 +156,7 @@ public class ModelDama extends BaseModel {
 
     private ArrayList<Coordinates> ceck(Coordinates cella, Pezzo pezzo,String direzione){
         ArrayList<Coordinates> listaPosizioniValide =new ArrayList<>();
-        System.out.println("sono qui per: "+cella);
+        //System.out.println("sono qui per: "+cella);
 
             int y;
             if(pezzo.fazione== Pezzo.Fazione.Bianco)
@@ -170,7 +170,7 @@ public class ModelDama extends BaseModel {
                 cellaSuccessiva=new Coordinates(cella.x+1,y);
 
             if(isWithinBounds(cellaSuccessiva) && !isPresentPezzoOnPosition(cellaSuccessiva)){
-                System.out.println("posso mangiare "+cella);
+                //System.out.println("posso mangiare "+cella);
                 listaPosizioniValide.add(cella);//pedina da mangiare
                 listaPosizioniValide.add(cellaSuccessiva);//posizione futura
 
@@ -180,13 +180,14 @@ public class ModelDama extends BaseModel {
                     y--;
 
                 Coordinates temp=new Coordinates(cellaSuccessiva.x-1,y);
+                //System.out.println("questa è la cella successiva"+cellaSuccessiva);
                 if (isWithinBounds(temp) && isPresentPezzoOnPosition(temp) && getPezzo(temp).fazione!=pezzo.fazione){
-                    listaPosizioniValide.addAll(ceck(new Coordinates(pezzo.posizione.x-1,y),pezzo,"sx"));
+                    listaPosizioniValide.addAll(ceck(new Coordinates(cellaSuccessiva.x-1,y),pezzo,"sx"));
                 }
 
                 temp= new Coordinates(cellaSuccessiva.x+1,y);
                 if (isWithinBounds(temp) && isPresentPezzoOnPosition(temp) && getPezzo(temp).fazione!=pezzo.fazione){
-                    listaPosizioniValide.addAll(ceck(new Coordinates(pezzo.posizione.x+1,y),pezzo,"dx"));
+                    listaPosizioniValide.addAll(ceck(new Coordinates(cellaSuccessiva.x+1,y),pezzo,"dx"));
                 }
 
             }
