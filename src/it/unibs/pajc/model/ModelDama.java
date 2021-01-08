@@ -71,7 +71,9 @@ public class ModelDama extends BaseModel {
     }
 
     public void removePezzo(Pezzo p){
-        //pezzi.remove(p);
+        System.out.println("pezzo mangiato= "+p.posizione);
+        System.out.println(pezzi.remove(p));
+
         fireValuesChange(new ChangeEvent(this));
 
     }
@@ -231,16 +233,18 @@ public class ModelDama extends BaseModel {
         boolean success=false;
         Pezzo p=getPezzo(posizioneAttuale);
 
-        //controllo su eated pieces per vedere quali sono sul percorso
-
         ArrayList<Coordinates> possibiliMosse= showMosse(p.posizione);
 
         for (Coordinates coordinates:possibiliMosse) {
             if (nuovaPosizione.equals(coordinates) && getPezzo(nuovaPosizione)==null) {
-                if(Math.abs(nuovaPosizione.y-coordinates.y)>1){
-                    if((nuovaPosizione.x-coordinates.x)>0){
+                if(Math.abs(nuovaPosizione.y-posizioneAttuale.y)==2){
+                    if((posizioneAttuale.x-nuovaPosizione.x)>0)
+                        //System.out.println("mangio pezzo: "+new Coordinates(posizioneAttuale.x-1,(posizioneAttuale.y+ nuovaPosizione.y)/2));
+                        removePezzo(getPezzo(new Coordinates(posizioneAttuale.x-1,(posizioneAttuale.y+ nuovaPosizione.y)/2)));
+                    else
+                        //System.out.println("mangio pezzo: "+new Coordinates(posizioneAttuale.x+1,(posizioneAttuale.y+ nuovaPosizione.y)/2));
+                        removePezzo(getPezzo(new Coordinates(posizioneAttuale.x+1,(posizioneAttuale.y+ nuovaPosizione.y)/2)));
 
-                    }
                 }
                 p.posizione = nuovaPosizione;
                 success = true;

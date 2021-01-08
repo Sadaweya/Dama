@@ -110,7 +110,10 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
     }
 
     private void coloraCella(Graphics2D g, Coordinates coordinates){
-        g.setColor(Color.MAGENTA);
+        if(modelDama.isPresentPezzoOnPosition(coordinates))
+            g.setColor(Color.MAGENTA);
+        else
+            g.setColor(Color.YELLOW);
         g.setStroke(new BasicStroke(3));
         g.drawRect(coordinates.x*cellSize,coordinates.y*cellSize,cellSize,cellSize);
 
@@ -201,7 +204,7 @@ public class PaintArea extends JPanel implements MouseMotionListener, MouseListe
         }
         if(!success){
             possiblePositions=modelDama.showMosse(cellaCliccata);
-            System.out.println(possiblePositions);
+            //System.out.println(possiblePositions);
         }
         //aggiungere controllo se posizione premuta è una delle posizioni possibili precedenti
         repaint();
