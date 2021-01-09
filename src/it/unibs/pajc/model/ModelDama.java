@@ -5,6 +5,7 @@ import it.unibs.pajc.Coordinates;
 import it.unibs.pajc.core.BaseModel;
 
 import javax.swing.event.ChangeEvent;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -31,6 +32,11 @@ public class ModelDama extends BaseModel {
             }
         }
 
+    }
+
+    private static ArrayList<Socket> clientList=new ArrayList<>();
+    public ModelDama(Socket client){
+       clientList.add(client);
     }
 
     public void addPezzo(Pezzo.Fazione fazione, Coordinates coordinates, boolean isDamone){

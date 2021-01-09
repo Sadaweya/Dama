@@ -24,6 +24,15 @@ public class GraphicsApp extends JFrame {
         });
     }
 
+    public void run() {
+        try {
+            GraphicsApp window = new GraphicsApp();
+            window.frame.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Create the frame.
      */
