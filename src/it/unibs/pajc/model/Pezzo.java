@@ -1,8 +1,5 @@
 package it.unibs.pajc.model;
 
-import it.unibs.pajc.Coordinates;
-
-import java.awt.*;
 import java.util.ArrayList;
 
 

@@ -1,5 +1,6 @@
 package it.unibs.pajc;
 
+import it.unibs.pajc.model.Coordinates;
 import it.unibs.pajc.model.ModelDama;
 import it.unibs.pajc.model.Pezzo;
 

@@ -1,4 +1,4 @@
-package it.unibs.pajc;
+package it.unibs.pajc.model;
 
 public class Coordinates {
     public int x;

@@ -1,7 +1,5 @@
 package it.unibs.pajc.model;
 
-import com.sun.jdi.ArrayReference;
-import it.unibs.pajc.Coordinates;
 import it.unibs.pajc.core.BaseModel;
 
 import javax.swing.event.ChangeEvent;
